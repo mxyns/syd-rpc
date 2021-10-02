@@ -26,25 +26,32 @@
 ## .irpc format
 .irpc are summaries of the interfaces implemented by "distributed" classes
 ### .irpc file content : (check [the provided example](/src/fr/mxyns/rpc/example/Voiture.irpc))
-`package`
-`interfaceName` (must be the name of the "distributed" class)
-`list of attributes`
-`list of methods`
+`package`  
+`interfaceName` (must be the name of the "distributed" class)  
+`list of attributes`  
+`list of methods`  
 
 ### Attributes
-identical to Java attribute declaration, preceded by a `@` and **without`;` at the end**
-       -  `@modifiers type name = default_value`
-       -  `@modifiers type name`
-       *e.g.* : `public String brand = "Renaut"`| (initialized)
-         or : `public String brand`  | (not initialized)
+identical to Java attribute declaration, preceded by a `@` and **without`;` at the end**  
+- `@modifiers type name = default_value`  
+- `@modifiers type name`  
+
+*e.g.* : `public String brand = "Renault"`| (initialized)  
+or : `public String brand`  | (not initialized)
+
 ### Methods
-identical to Java method declaration in interfaces, **without `;` at the end**
-       - `modifiers returnType methodName(ArgType1 arg1, ArgType2 arg2...)`
-       *e.g.* : `String reversedName(String prefix, String suffix)`  | (most of the time you won't have any modifiers, just like in Java interfaces)
+identical to Java method declaration in interfaces, **without `;` at the end**  
+- `modifiers returnType methodName(ArgType1 arg1, ArgType2 arg2...)`  
+
+*e.g.* : `String reversedName(String prefix, String suffix)`  | (most of the time you won't have any modifiers, just like in Java interfaces)
+
+---
 
 *NB* : `TARGET` and `PORT` used by the server and the generated classes are set in [Server.java](/src/fr/mxyns/rpc/compiler/Server.java) as globals
 
-##
+---
+
+## TODO / FIXME
 Known problems :
    + methods with 0 arguments require us to write a `null` value as a workaround or else the programs hangs on the receiving `.readUTF()`
    + Dummy class needed if we don't want errors showing up in the IDE when using classes that will be generated from .irpc
