@@ -1,0 +1,8 @@
+fr.mxyns.rpc.example
+Voiture
+@public String name = "default_name"
+String name()
+void name(String newName)
+Trajet rouleChezToi(String str)
+Trajet roule(String from, String to)
+String reversedName(String prefix, String suffix)
