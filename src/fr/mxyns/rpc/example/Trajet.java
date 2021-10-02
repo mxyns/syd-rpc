@@ -1,4 +1,4 @@
-package fr.mxyns.rpc;
+package fr.mxyns.rpc.example;
 
 import java.io.Serializable;
 
