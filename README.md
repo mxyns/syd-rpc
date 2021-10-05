@@ -4,7 +4,7 @@
 
  0. *(from /syd-rpc)*
  1. compile fr.mxyns.rpc.compiler
- 2. run `java fr.mxyns.rpc.compiler.Compiler -o build -i src/fr/mxyns/rpc/example/ -d Client.java IVoiture.java Main.java Trajet.java Voiture_dist.java -I Voiture.irpc -c -r fr.mxyns.rpc.example.Main -ra __server'
+ 2. run `java fr.mxyns.rpc.compiler.Compiler -o build -i src/fr/mxyns/rpc/example/ -d Client.java IVoiture.java Main.java Trajet.java Voiture_dist.java -I Voiture.irpc -c -r fr.mxyns.rpc.example.Main -ra __server`
  3. generated classes should be located and compiled in /syd-rpc/build and example program should run in 'server' mode
 
 ## Features
