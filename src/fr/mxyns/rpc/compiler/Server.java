@@ -8,12 +8,28 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import static fr.mxyns.rpc.compiler.RPCUtils.*;
 
 public class Server {
 
     public static String TARGET = "localhost";
     public static int COMM_PORT = 12345;
+
+    public static void main(String[] args) {
+
+        HashMap<String, String> argsMap = parseArgs(args);
+
+        Server.TARGET = getArg(argsMap, "-target", Server.TARGET);
+        Server.COMM_PORT = Integer.parseInt(getArg(argsMap, "-port", String.valueOf(Server.COMM_PORT)));
+
+        try {
+            Server.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static void start() throws IOException {
 
@@ -76,41 +92,5 @@ public class Server {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public static Object genericFunctionCall(String target, int commPort, Object callee, String functionName, Object... args) throws IOException, ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
-
-        Object result;
-        Socket socket = new Socket(target, commPort);
-        ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-        oos.writeObject(callee);
-        oos.writeUTF(functionName);
-        oos.writeInt(args.length);
-
-        if (args.length == 0) {
-            /* FIXME needed when argc == 0 for some reason
-             * without this the functionName = ois.readUTF() never returns ...
-             */
-            oos.writeObject(null);
-        } else
-            for (Object o : args) {
-                oos.writeObject(o);
-            }
-
-        ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
-
-        Object newState = ois.readObject();
-        result = ois.readObject();
-
-        socket.close();
-
-        Class serverClass = newState.getClass();
-        for (Field f : callee.getClass().getFields()) {
-            if (!Modifier.isFinal(f.getModifiers())) {
-                f.set(callee, serverClass.getField(f.getName()).get(newState));
-            }
-        }
-
-        return result;
     }
 }

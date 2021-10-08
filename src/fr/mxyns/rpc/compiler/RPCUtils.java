@@ -1,11 +1,60 @@
 package fr.mxyns.rpc.compiler;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.net.Socket;
 import java.util.HashMap;
 import java.util.Objects;
 
 import static java.lang.System.exit;
 
-public class ArgsUtils {
+public class RPCUtils {
+
+    /**
+     * RPC Related functions
+     */
+    public static Object genericFunctionCall(String target, int commPort, Object callee, String functionName, Object... args) throws IOException, ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
+
+        Object result;
+        Socket socket = new Socket(target, commPort);
+        ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+        oos.writeObject(callee);
+        oos.writeUTF(functionName);
+        oos.writeInt(args.length);
+
+        if (args.length == 0) {
+            /* FIXME needed when argc == 0 for some reason
+             * without this the functionName = ois.readUTF() never returns ...
+             */
+            oos.writeObject(null);
+        } else
+            for (Object o : args) {
+                oos.writeObject(o);
+            }
+
+        ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+
+        Object newState = ois.readObject();
+        result = ois.readObject();
+
+        socket.close();
+
+        Class serverClass = newState.getClass();
+        for (Field f : callee.getClass().getFields()) {
+            if (!Modifier.isFinal(f.getModifiers())) {
+                f.set(callee, serverClass.getField(f.getName()).get(newState));
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * CLI Parameter related functions
+     */
 
     public static HashMap<String, String> parseArgs(String[] args) {
 

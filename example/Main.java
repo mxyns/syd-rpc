@@ -4,7 +4,7 @@ import fr.mxyns.rpc.compiler.Server;
 
 import java.io.IOException;
 import java.util.HashMap;
-import static fr.mxyns.rpc.compiler.ArgsUtils.*;
+import static fr.mxyns.rpc.compiler.RPCUtils.*;
 
 public class Main {
 

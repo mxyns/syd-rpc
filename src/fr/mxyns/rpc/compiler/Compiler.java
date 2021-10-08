@@ -11,7 +11,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static fr.mxyns.rpc.compiler.ArgsUtils.*;
+import static fr.mxyns.rpc.compiler.RPCUtils.*;
 
 public class Compiler {
 
@@ -88,7 +88,7 @@ public class Compiler {
 
         String[] libDeploy = new String[] {
             "Server.java",
-            "ArgsUtils.java"
+            "RPCUtils.java"
         };
 
         Files.createDirectories(outputPath);
@@ -96,7 +96,12 @@ public class Compiler {
         // Deploy files that are mandatory for the compiled program to work
         for (String lib : libDeploy) {
             srcPath = Path.of("./src", Compiler.class.getPackageName().replaceAll("\\.", "/"), lib);
-            Files.copy(srcPath, outputPath.resolve(lib), StandardCopyOption.REPLACE_EXISTING);
+            try {
+                Files.copy(srcPath, outputPath.resolve(lib), StandardCopyOption.REPLACE_EXISTING);
+            } catch (Exception ex) {
+                System.err.println("[err] Couldn't copy " + srcPath.toAbsolutePath() + " to " + outputPath.resolve(lib).toAbsolutePath() + ".\n" +
+                                   "Please locate the file and do it manually as it is required for the compiled program to work properly.");
+            }
         }
 
         // If directories given, list files in them and add to deployed files
@@ -121,7 +126,12 @@ public class Compiler {
             if (interfaceToIgnore.contains(srcPath.getFileName().toString())) continue;
 
             Files.createDirectories(outputPath);
-            Files.copy(srcPath, outputPath.resolve(file), StandardCopyOption.REPLACE_EXISTING);
+            try {
+                Files.copy(srcPath, outputPath.resolve(file), StandardCopyOption.REPLACE_EXISTING);
+            } catch (Exception ex) {
+                System.err.println("[err] Couldn't copy " + srcPath.toAbsolutePath() + " to " + outputPath.resolve(file).toAbsolutePath() + ".\n" +
+                                   "Please locate the file and do it manually.");
+            }
         }
     }
 
@@ -149,7 +159,7 @@ public class Compiler {
                             
             import java.io.IOException;
             import java.io.Serializable;
-            import fr.mxyns.rpc.compiler.Server;
+            import fr.mxyns.rpc.compiler.RPCUtils;
             import %s.I%s;
                         
             public class %s implements I%s {
@@ -189,7 +199,7 @@ public class Compiler {
                                               
                                   """,
                               interfaceName,
-                              attributesToStringCode
+                              attributesToStringCode.length() > 0 ? attributesToStringCode : "\"\""
                              );
 
         stub += "}\n";
@@ -262,7 +272,7 @@ public class Compiler {
                     @Override
                     public %s %s(%s) {
                         try {
-                            %s Server.genericFunctionCall(Server.TARGET, Server.COMM_PORT, this, "%s"%s);
+                            %s RPCUtils.genericFunctionCall(Server.TARGET, Server.COMM_PORT, this, "%s"%s);
                         } catch (IOException | ClassNotFoundException | NoSuchFieldException | IllegalAccessException e) {
                             e.printStackTrace();
                         }
