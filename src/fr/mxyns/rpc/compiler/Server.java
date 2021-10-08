@@ -14,15 +14,12 @@ import static fr.mxyns.rpc.compiler.RPCUtils.*;
 
 public class Server {
 
-    public static String TARGET = "localhost";
-    public static int COMM_PORT = 12345;
-
     public static void main(String[] args) {
 
         HashMap<String, String> argsMap = parseArgs(args);
 
-        Server.TARGET = getArg(argsMap, "-target", Server.TARGET);
-        Server.COMM_PORT = Integer.parseInt(getArg(argsMap, "-port", String.valueOf(Server.COMM_PORT)));
+        RPCUtils.TARGET = getArg(argsMap, "-target", RPCUtils.TARGET);
+        RPCUtils.COMM_PORT = Integer.parseInt(getArg(argsMap, "-port", String.valueOf(RPCUtils.COMM_PORT)));
 
         try {
             Server.start();
@@ -33,9 +30,9 @@ public class Server {
 
     public static void start() throws IOException {
 
-        ServerSocket socket = new ServerSocket(Server.COMM_PORT);
+        ServerSocket socket = new ServerSocket(RPCUtils.COMM_PORT);
 
-        System.out.println("Starting server on 0.0.0.0:" + Server.COMM_PORT);
+        System.out.println("Starting server on 0.0.0.0:" + RPCUtils.COMM_PORT);
 
         AtomicInteger i = new AtomicInteger();
         while (true) {

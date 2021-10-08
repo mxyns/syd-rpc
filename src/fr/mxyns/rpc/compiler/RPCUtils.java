@@ -13,6 +13,9 @@ import static java.lang.System.exit;
 
 public class RPCUtils {
 
+    public static String TARGET = "localhost";
+    public static int COMM_PORT = 12345;
+
     /**
      * RPC Related functions
      */

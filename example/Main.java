@@ -4,6 +4,7 @@ import fr.mxyns.rpc.compiler.Server;
 
 import java.io.IOException;
 import java.util.HashMap;
+import fr.mxyns.rpc.compiler.RPCUtils;
 import static fr.mxyns.rpc.compiler.RPCUtils.*;
 
 public class Main {
@@ -17,8 +18,8 @@ public class Main {
 
         HashMap<String, String> argsMap = parseArgs(args);
 
-        Server.TARGET = getArg(argsMap, "-target", Server.TARGET);
-        Server.COMM_PORT = Integer.parseInt(getArg(argsMap, "-port", String.valueOf(Server.COMM_PORT)));
+        RPCUtils.TARGET = getArg(argsMap, "-target", RPCUtils.TARGET);
+        RPCUtils.COMM_PORT = Integer.parseInt(getArg(argsMap, "-port", String.valueOf(RPCUtils.COMM_PORT)));
 
         if (hasFlag(argsMap, "-server")) {
 

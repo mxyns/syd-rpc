@@ -272,7 +272,7 @@ public class Compiler {
                     @Override
                     public %s %s(%s) {
                         try {
-                            %s RPCUtils.genericFunctionCall(Server.TARGET, Server.COMM_PORT, this, "%s"%s);
+                            %s RPCUtils.genericFunctionCall(RPCUtils.TARGET, RPCUtils.COMM_PORT, this, "%s"%s);
                         } catch (IOException | ClassNotFoundException | NoSuchFieldException | IllegalAccessException e) {
                             e.printStackTrace();
                         }
